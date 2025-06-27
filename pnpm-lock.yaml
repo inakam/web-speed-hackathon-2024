@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      sharp:
+        specifier: 0.33.2
+        version: 0.33.2
     devDependencies:
       '@3846masa/configs':
         specifier: github:3846masa/configs#0e9352c7ad57e51187647f2c4aa27baea842d149
