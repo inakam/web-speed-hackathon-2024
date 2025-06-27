@@ -1,7 +1,5 @@
 /// <reference types="@types/serviceworker" />
 
-import { transformJpegXLToBmp } from './transformJpegXLToBmp';
-
 self.addEventListener('install', (ev: ExtendableEvent) => {
   ev.waitUntil(self.skipWaiting());
 });
@@ -15,14 +13,6 @@ self.addEventListener('fetch', (ev: FetchEvent) => {
 });
 
 async function onFetch(request: Request): Promise<Response> {
-  const res = await fetch(request);
-
-  if (res.headers.get('Content-Type') === 'image/jxl') {
-    // If the response is a JPEG XL image, transform it to BMP format.
-    // JPEG XL は Chrome ではサポートされていないため、BMP に変換して返す。
-    // wasm が使われているため、Viteに移行しようとするとこの処理がネックになる
-    return transformJpegXLToBmp(res);
-  } else {
-    return res;
-  }
+  // JPEG XL変換処理は削除済み - サーバーサイドで事前にJPEGに変換
+  return fetch(request);
 }

@@ -91,7 +91,24 @@ app.get(
     }
 
     const origFileGlob = [path.resolve(IMAGES_PATH, `${reqImgId}`), path.resolve(IMAGES_PATH, `${reqImgId}.*`)];
-    const [origFilePath] = await globby(origFileGlob, { absolute: true, onlyFiles: true });
+    let [origFilePath] = await globby(origFileGlob, { absolute: true, onlyFiles: true });
+
+    // JPEG XLリクエストの場合、対応するJPEGファイルを優先して使用
+    if (reqImgExt === '.jxl' || resImgFormat === 'jxl') {
+      const jpegPath = path.resolve(IMAGES_PATH, `${reqImgId}.jpg`);
+      try {
+        await fs.access(jpegPath);
+        origFilePath = jpegPath;
+        // JPEGファイルが存在する場合、リクエストフォーマットもJPEGに変更
+        if (resImgFormat === 'jxl') {
+          c.header('Content-Type', IMAGE_MIME_TYPE['jpeg']);
+          return c.body(createStreamBody(createReadStream(origFilePath)));
+        }
+      } catch {
+        // JPEGファイルが存在しない場合は元のロジックを継続
+      }
+    }
+
     if (origFilePath == null) {
       throw new HTTPException(404, { message: 'Not found.' });
     }
