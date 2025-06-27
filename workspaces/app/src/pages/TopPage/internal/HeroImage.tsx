@@ -15,7 +15,7 @@ export const HeroImage: React.FC = () => {
   return (
     <_Picture>
       <source srcSet="./assets/heroImage.webp" type="image/webp" />
-      <_Image alt="Cyber TOON" src="./assets/heroImage.png" />
+      <_Image alt="Cyber TOON" loading="eager" src="./assets/heroImage.png" />
     </_Picture>
   );
 };
