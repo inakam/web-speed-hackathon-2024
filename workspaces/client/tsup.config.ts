@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { pnpmWorkspaceRoot as findWorkspaceDir } from '@node-kit/pnpm-workspace-root';
-import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 import findPackageDir from 'pkg-dir';
 import { defineConfig } from 'tsup';
 import type { Options } from 'tsup';
@@ -37,19 +36,6 @@ export default defineConfig(async (): Promise<Options[]> => {
         };
         options.publicPath = '/';
       },
-      // 実はここも不要説
-      esbuildPlugins: [
-        polyfillNode({
-          globals: {
-            process: false,
-          },
-          polyfills: {
-            events: true,
-            fs: true,
-            path: true,
-          },
-        }),
-      ],
       format: 'iife',
       loader: {
         '.json?file': 'file',
@@ -62,7 +48,7 @@ export default defineConfig(async (): Promise<Options[]> => {
       shims: true,
       sourcemap: false,
       splitting: false,
-      target: ['chrome58'],
+      target: ['chrome120'],
       treeshake: false,
     },
   ];
